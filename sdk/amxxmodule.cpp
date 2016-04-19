@@ -1,36 +1,16 @@
-/* AMX Mod X
-*
-* by the AMX Mod X Development Team
-*  originally developed by OLO
-*
-* Parts Copyright (C) 2001-2003 Will Day <willday@hpgx.net>
-*
-*  This program is free software; you can redistribute it and/or modify it
-*  under the terms of the GNU General Public License as published by the
-*  Free Software Foundation; either version 2 of the License, or (at
-*  your option) any later version.
-*
-*  This program is distributed in the hope that it will be useful, but
-*  WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-*  General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program; if not, write to the Free Software Foundation,
-*  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*
-*  In addition, as a special exception, the author gives permission to
-*  link the code of this program with the Half-Life Game Engine ("HL
-*  Engine") and Modified Game Libraries ("MODs") developed by Valve,
-*  L.L.C ("Valve"). You must obey the GNU General Public License in all
-*  respects for all of the code used other than the HL Engine and MODs
-*  from Valve. If you modify this file, you may extend this exception
-*  to your version of the file, but you are not obligated to do so. If
-*  you do not wish to do so, delete this exception statement from your
-*  version.
-*
-*  Description: AMX Mod X Module Interface Functions
-*/
+// vim: set ts=4 sw=4 tw=99 noet:
+//
+// AMX Mod X, based on AMX Mod by Aleksander Naszko ("OLO").
+// Copyright (C) The AMX Mod X Development Team.
+// Parts Copyright (C) 2001-2003 Will Day <willday@hpgx.net>
+//
+// This software is licensed under the GNU General Public License, version 3 or higher.
+// Additional exceptions apply. For full license details, see LICENSE.txt or visit:
+//     https://alliedmods.net/amxmodx-license
+
+//
+// Module SDK
+//
 
 #include <string.h>
 #include <new>
@@ -2240,7 +2220,7 @@ static META_FUNCTIONS g_MetaFunctions_Table =
 	GetEngineFunctions_Post
 };
 
-C_DLLEXPORT int Meta_Query(char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_t *pMetaUtilFuncs)
+C_DLLEXPORT int Meta_Query(const char *ifvers, plugin_info_t **pPlugInfo, mutil_funcs_t *pMetaUtilFuncs)
 {
 	if ((int) CVAR_GET_FLOAT("developer") != 0)
 		UTIL_LogPrintf("[%s] dev: called: Meta_Query; version=%s, ours=%s\n", 
@@ -2334,7 +2314,7 @@ C_DLLEXPORT int Meta_Detach(PLUG_LOADTIME now, PL_UNLOAD_REASON reason)
 
 
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 // linux prototype
 C_DLLEXPORT void GiveFnptrsToDll( enginefuncs_t* pengfuncsFromEngine, globalvars_t *pGlobals ) {
 
@@ -3050,7 +3030,7 @@ char* UTIL_VarArgs( char *format, ... )
 // UTIL_LogPrintf - Prints a logged message to console.
 // Preceded by LOG: ( timestamp ) < message >
 //=========================================================
-void UTIL_LogPrintf( char *fmt, ... )
+void UTIL_LogPrintf( const char *fmt, ... )
 {
 	va_list			argptr;
 	static char		string[1024];
@@ -3138,8 +3118,20 @@ unsigned short FixedUnsigned16( float value, float scale )
 }
 #endif // USE_METAMOD
 
-
-cell* get_amxaddr(AMX *amx, cell amx_addr)
+size_t UTIL_Format(char *buffer, size_t maxlength, const char *fmt, ...)
 {
-	return (cell *)(amx->base + (int)(((AMX_HEADER *)amx->base)->dat + amx_addr));
+	va_list ap;
+	va_start(ap, fmt);
+	size_t len = vsnprintf(buffer, maxlength, fmt, ap);
+	va_end(ap);
+
+	if (len >= maxlength)
+	{
+		buffer[maxlength - 1] = '\0';
+		return (maxlength - 1);
+	}
+	else
+	{
+		return len;
+	}
 }

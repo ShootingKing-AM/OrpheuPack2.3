@@ -40,7 +40,8 @@ class Orpheu
 		static cell AMX_NATIVE_CALL SetStructMember(AMX*amx,cell* params);
 		static cell AMX_NATIVE_CALL GetStructMember(AMX*amx,cell* params);
 		static cell AMX_NATIVE_CALL GetStructFromParam(AMX*amx,cell* params);
-		static cell AMX_NATIVE_CALL CloneStructFromParam(AMX* amx,cell* params);
+		static cell AMX_NATIVE_CALL CloneStructFromParam(AMX* amx,cell* params);		
+		static cell AMX_NATIVE_CALL PackStructures(AMX* amx, cell* params);
 		static cell AMX_NATIVE_CALL CreateFunction(AMX* amx,cell* params);
 		static cell AMX_NATIVE_CALL GetEngineFunctionsStruct(AMX* amx,cell* params);
 		static cell AMX_NATIVE_CALL GetDLLFunctionsStruct(AMX* amx,cell* params);

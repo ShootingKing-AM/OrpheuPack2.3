@@ -59,7 +59,19 @@ long StructHandler::allocate()
 	return structureAddress;
 }
 
+long StructHandler::allocateBySize(unsigned int size)
+{
+	long structureAddress = (long)allocateMemoryBySize(size);
+	memset((void*)structureAddress, 0, size);
+	return structureAddress;
+}
+
 int StructHandler::getSize()
+{
+	return structInfo.size;
+}
+
+int StructHandler::getStructSize()
 {
 	return structInfo.size;
 }
